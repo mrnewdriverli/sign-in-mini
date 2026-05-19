@@ -1,0 +1,49 @@
+<!-- 签到表单页 -->
+<view class="container">
+  <view class="card">
+    <view class="card-title">📋 签到信息登记</view>
+
+    <view class="form-group">
+      <view class="form-label">姓名</view>
+      <input
+        class="form-input"
+        placeholder="请输入您的姓名"
+        data-field="name"
+        value="{{name}}"
+        bindinput="handleInput"
+      />
+    </view>
+
+    <view class="form-group">
+      <view class="form-label">手机号</view>
+      <input
+        class="form-input"
+        type="number"
+        maxlength="11"
+        placeholder="请输入手机号"
+        data-field="phone"
+        value="{{phone}}"
+        bindinput="handleInput"
+      />
+    </view>
+
+    <view class="form-group">
+      <view class="form-label">部门 / 单位</view>
+      <input
+        class="form-input"
+        placeholder="请输入部门或单位名称"
+        data-field="department"
+        value="{{department}}"
+        bindinput="handleInput"
+      />
+    </view>
+
+    <button
+      class="btn-primary submit-btn"
+      disabled="{{submitting}}"
+      bindtap="submitSignin"
+    >
+      {{submitting ? '提交中...' : '提交签到'}}
+    </button>
+  </view>
+</view>

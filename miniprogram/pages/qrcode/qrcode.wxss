@@ -1,0 +1,116 @@
+/* 动态二维码页样式 */
+.container {
+  padding: 30px 20px;
+}
+
+.qrcode-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 28px 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.card-icon {
+  font-size: 24px;
+  margin-right: 8px;
+}
+
+.card-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #333;
+}
+
+.tips-text {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 24px;
+}
+
+/* 二维码区域 */
+.qrcode-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  min-height: 220px;
+}
+
+.qrcode-canvas {
+  width: 220px;
+  height: 220px;
+}
+
+.qrcode-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #999;
+}
+
+/* 刷新信息 */
+.refresh-info {
+  background: #f0f7ff;
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin-bottom: 16px;
+}
+
+.countdown-text {
+  font-size: 15px;
+  color: #007AFF;
+  font-weight: 500;
+}
+
+/* 安全提示 */
+.security-tip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff9e6;
+  border: 1px solid #ffe8a1;
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin-bottom: 20px;
+}
+
+.tip-icon {
+  font-size: 16px;
+  margin-right: 6px;
+}
+
+.tip-text {
+  font-size: 13px;
+  color: #b8860b;
+}
+
+/* 手动刷新按钮 */
+.btn-refresh {
+  width: 100%;
+  background: #fff;
+  color: #007AFF;
+  border: 1px solid #007AFF;
+  border-radius: 8px;
+  padding: 10px 0;
+  font-size: 15px;
+}
+
+.btn-refresh:active {
+  background: #f0f7ff;
+}

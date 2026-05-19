@@ -1,0 +1,51 @@
+<!-- 核销页 -->
+<view class="container">
+  <!-- 标题区 -->
+  <view class="header">
+    <view class="header-title">📱 签到核销</view>
+    <view class="header-desc">扫描参会人员的动态二维码完成核销</view>
+  </view>
+
+  <!-- 扫码按钮 -->
+  <button
+    class="btn-scan"
+    bindtap="scanCode"
+    disabled="{{loading}}"
+  >
+    <text class="scan-icon">📷</text>
+    <text>{{loading ? '核销中...' : '扫码核销'}}</text>
+  </button>
+
+  <!-- 核销结果 -->
+  <view wx:if="{{result}}" class="result-card result-{{resultType}}">
+    <text class="result-text">{{result}}</text>
+  </view>
+
+  <!-- 导出按钮 -->
+  <button class="btn-export" bindtap="exportExcel">📊 导出签到 Excel</button>
+
+  <!-- 已核销列表 -->
+  <view class="list-section" wx:if="{{verifyList.length > 0}}">
+    <view class="list-title">已核销签到记录</view>
+    <view class="list-total">共 {{verifyList.length}} 人</view>
+
+    <view
+      class="list-item"
+      wx:for="{{verifyList}}"
+      wx:key="_id"
+    >
+      <view class="item-index">{{index + 1}}</view>
+      <view class="item-info">
+        <view class="item-name">{{item.name}}</view>
+        <view class="item-dept">{{item.department}}</view>
+      </view>
+      <view class="item-time">{{item.signinTimeStr}}</view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:elif="{{verifyList.length === 0 && !result}}" class="empty-state">
+    <text class="empty-icon">📭</text>
+    <text class="empty-text">暂无签到记录</text>
+  </view>
+</view>

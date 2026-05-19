@@ -1,0 +1,20 @@
+# 微信开发者工具私有配置
+project.private.config.json
+
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+*.swp
+*.swo
+
+# 微信开发者工具
+miniprogram/.idea/
+
+# 云函数依赖（部署时云端自动安装）
+cloudfunctions/*/node_modules/
+
+# 日志
+*.log
+npm-debug.log*
