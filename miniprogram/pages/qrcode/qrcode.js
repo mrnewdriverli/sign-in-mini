@@ -1,5 +1,5 @@
 // 动态签到码页 - 管理员专用
-const ADMIN_PWD = 'admin888'
+const ADMIN_PWD = '123456Aa?'
 
 Page({
   data: {
