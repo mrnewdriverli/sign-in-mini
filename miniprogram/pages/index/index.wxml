@@ -1,49 +1,46 @@
 <!-- 签到表单页 -->
 <view class="container">
   <view class="card">
-    <view class="card-title">📋 签到信息登记</view>
+    <view class="card-title">📋 会议签到</view>
 
-    <view class="form-group">
-      <view class="form-label">姓名</view>
-      <input
-        class="form-input"
-        placeholder="请输入您的姓名"
-        data-field="name"
-        value="{{name}}"
-        bindinput="handleInput"
-      />
+    <!-- 未扫码状态 -->
+    <view wx:if="{{!scanned}}" class="scan-area">
+      <view class="scan-desc">请先扫描现场动态二维码获取签到凭证</view>
+      <button class="btn-scan" bindtap="scanCode" disabled="{{scanning}}">
+        {{scanning ? '扫描中...' : '📷 扫码签到'}}
+      </button>
+      <view wx:if="{{scanError}}" class="scan-error">{{scanError}}</view>
     </view>
 
-    <view class="form-group">
-      <view class="form-label">手机号</view>
-      <input
-        class="form-input"
-        type="number"
-        maxlength="11"
-        placeholder="请输入手机号"
-        data-field="phone"
-        value="{{phone}}"
-        bindinput="handleInput"
-      />
+    <!-- 已扫码，填写信息 -->
+    <view wx:if="{{scanned}}">
+      <view class="scan-ok">✅ 扫码成功，请完善以下信息</view>
+
+      <view class="form-group">
+        <view class="form-label">姓名</view>
+        <input class="form-input" placeholder="请输入您的姓名" data-field="name" value="{{name}}" bindinput="handleInput"/>
+      </view>
+
+      <view class="form-group">
+        <view class="form-label">手机号</view>
+        <input class="form-input" type="number" maxlength="11" placeholder="请输入手机号" data-field="phone" value="{{phone}}" bindinput="handleInput"/>
+      </view>
+
+      <view class="form-group">
+        <view class="form-label">部门/单位</view>
+        <input class="form-input" placeholder="请输入部门或单位名称" data-field="department" value="{{department}}" bindinput="handleInput"/>
+      </view>
+
+      <button class="btn-primary submit-btn" disabled="{{submitting}}" bindtap="submitSignin">
+        {{submitting ? '提交中...' : '提交签到'}}
+      </button>
     </view>
 
-    <view class="form-group">
-      <view class="form-label">部门 / 单位</view>
-      <input
-        class="form-input"
-        placeholder="请输入部门或单位名称"
-        data-field="department"
-        value="{{department}}"
-        bindinput="handleInput"
-      />
+    <!-- 签到成功 -->
+    <view wx:if="{{success}}" class="success-area">
+      <view class="success-icon">✅</view>
+      <view class="success-text">签到成功！</view>
+      <view class="success-name">{{signedName}}</view>
     </view>
-
-    <button
-      class="btn-primary submit-btn"
-      disabled="{{submitting}}"
-      bindtap="submitSignin"
-    >
-      {{submitting ? '提交中...' : '提交签到'}}
-    </button>
   </view>
 </view>

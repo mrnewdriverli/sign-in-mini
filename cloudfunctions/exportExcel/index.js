@@ -1,85 +1,73 @@
-// 云函数：导出签到记录为 Excel
+// 云函数：查询签到列表 / 导出 CSV
 const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 
-// 分页获取全部数据（突破 100 条限制）
-async function getAllRecords(collection) {
-  const MAX_LIMIT = 100
-  const countResult = await collection.count()
-  const total = countResult.total
-
+// 分页获取全部记录
+async function getAll(collection) {
+  const MAX = 100
+  const countRes = await collection.count()
+  const total = countRes.total
   if (total === 0) return []
-
-  const batchTimes = Math.ceil(total / MAX_LIMIT)
+  const batches = Math.ceil(total / MAX)
   const tasks = []
-
-  for (let i = 0; i < batchTimes; i++) {
-    tasks.push(
-      collection.skip(i * MAX_LIMIT).limit(MAX_LIMIT).get()
-    )
+  for (let i = 0; i < batches; i++) {
+    tasks.push(collection.orderBy('createTime', 'desc').skip(i * MAX).limit(MAX).get())
   }
-
   const results = await Promise.all(tasks)
-  return results.reduce((acc, cur) => acc.concat(cur.data), [])
+  return results.reduce((a, c) => a.concat(c.data), [])
 }
 
 // 格式化时间
-function formatDate(date) {
-  if (!date) return '未签到'
-  const d = new Date(date)
-  const year = d.getFullYear()
-  const month = String(d.getMonth() + 1).padStart(2, '0')
-  const day = String(d.getDate()).padStart(2, '0')
-  const hour = String(d.getHours()).padStart(2, '0')
-  const minute = String(d.getMinutes()).padStart(2, '0')
-  const second = String(d.getSeconds()).padStart(2, '0')
-  return `${year}-${month}-${day} ${hour}:${minute}:${second}`
+function fmt(d) {
+  if (!d) return ''
+  const t = new Date(d)
+  const pad = (n) => String(n).padStart(2, '0')
+  return `${t.getFullYear()}-${pad(t.getMonth()+1)}-${pad(t.getDate())} ${pad(t.getHours())}:${pad(t.getMinutes())}:${pad(t.getSeconds())}`
 }
 
 exports.main = async (event, context) => {
   try {
-    const data = await getAllRecords(db.collection('signinRecords'))
+    const data = await getAll(db.collection('signinRecords'))
 
-    // 组装 CSV 格式（不依赖第三方库，兼容性更好）
-    const BOM = '﻿' // UTF-8 BOM，确保 Excel 正确识别中文
-    const header = '序号,姓名,手机号,部门,提交时间,签到时间,签到状态\n'
-    const rows = data.map((item, index) => {
-      return [
-        index + 1,
-        `"${(item.name || '').replace(/"/g, '""')}"`,
-        `"${(item.phone || '').replace(/"/g, '""')}"`,
-        `"${(item.department || '').replace(/"/g, '""')}"`,
-        `"${formatDate(item.createTime)}"`,
-        `"${formatDate(item.signinTime)}"`,
-        `"${item.isSigned ? '已签到' : '未签到'}"`
-      ].join(',')
-    }).join('\n')
+    // 列表查询
+    if (event.action !== 'export') {
+      const list = data.map(item => ({
+        ...item,
+        timeStr: fmt(item.createTime)
+      }))
+      return { success: true, data: list, count: data.length }
+    }
 
-    const csvContent = BOM + header + rows
-    const buffer = Buffer.from(csvContent, 'utf-8')
+    // CSV 导出
+    const BOM = '﻿' // UTF-8 BOM
+    const header = '序号,姓名,手机号,部门,签到时间\n'
+    const rows = data.map((item, i) => [
+      i + 1,
+      `"${(item.name || '').replace(/"/g, '""')}"`,
+      `"${(item.phone || '').replace(/"/g, '""')}"`,
+      `"${(item.department || '').replace(/"/g, '""')}"`,
+      `"${fmt(item.createTime)}"`
+    ].join(',')).join('\n')
 
-    // 上传到云存储
-    const timestamp = Date.now()
-    const cloudPath = `exports/signin-records-${timestamp}.csv`
-    const uploadResult = await cloud.uploadFile({
-      cloudPath,
+    const csv = BOM + header + rows
+    const buffer = Buffer.from(csv, 'utf-8')
+
+    const upload = await cloud.uploadFile({
+      cloudPath: `exports/signin-${Date.now()}.csv`,
       fileContent: buffer
     })
 
-    // 获取临时下载链接
-    const urlResult = await cloud.getTempFileURL({
-      fileList: [uploadResult.fileID]
-    })
+    const urlRes = await cloud.getTempFileURL({ fileList: [upload.fileID] })
 
     return {
       success: true,
-      fileID: uploadResult.fileID,
-      downloadUrl: urlResult.fileList[0].tempFileURL,
-      totalCount: data.length
+      fileID: upload.fileID,
+      downloadUrl: urlRes.fileList[0].tempFileURL,
+      count: data.length
     }
   } catch (err) {
     console.error('exportExcel 错误:', err)
-    return { success: false, message: '导出失败，请重试' }
+    return { success: false, message: '操作失败，请重试' }
   }
 }

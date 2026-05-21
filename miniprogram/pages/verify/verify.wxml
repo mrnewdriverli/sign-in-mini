@@ -1,51 +1,42 @@
-<!-- 核销页 -->
+<!-- 签到管理页 - 管理员专用 -->
 <view class="container">
-  <!-- 标题区 -->
-  <view class="header">
-    <view class="header-title">📱 签到核销</view>
-    <view class="header-desc">扫描参会人员的动态二维码完成核销</view>
+
+  <!-- 未验证 -->
+  <view wx:if="{{!authed}}" class="auth-card">
+    <view class="auth-icon">🔐</view>
+    <view class="auth-title">管理员验证</view>
+    <view class="auth-desc">请输入管理员密码</view>
+    <input class="auth-input" type="password" placeholder="管理员密码" value="{{pwdInput}}" bindinput="onPwdInput" bindconfirm="checkPwd"/>
+    <button class="btn-auth" bindtap="checkPwd">验证进入</button>
+    <view class="auth-hint">默认密码：admin888</view>
   </view>
 
-  <!-- 扫码按钮 -->
-  <button
-    class="btn-scan"
-    bindtap="scanCode"
-    disabled="{{loading}}"
-  >
-    <text class="scan-icon">📷</text>
-    <text>{{loading ? '核销中...' : '扫码核销'}}</text>
-  </button>
-
-  <!-- 核销结果 -->
-  <view wx:if="{{result}}" class="result-card result-{{resultType}}">
-    <text class="result-text">{{result}}</text>
-  </view>
-
-  <!-- 导出按钮 -->
-  <button class="btn-export" bindtap="exportExcel">📊 导出签到 Excel</button>
-
-  <!-- 已核销列表 -->
-  <view class="list-section" wx:if="{{verifyList.length > 0}}">
-    <view class="list-title">已核销签到记录</view>
-    <view class="list-total">共 {{verifyList.length}} 人</view>
-
-    <view
-      class="list-item"
-      wx:for="{{verifyList}}"
-      wx:key="_id"
-    >
-      <view class="item-index">{{index + 1}}</view>
-      <view class="item-info">
-        <view class="item-name">{{item.name}}</view>
-        <view class="item-dept">{{item.department}}</view>
-      </view>
-      <view class="item-time">{{item.signinTimeStr}}</view>
+  <!-- 已验证 -->
+  <view wx:if="{{authed}}">
+    <view class="header">
+      <view class="header-title">📊 签到管理</view>
+      <view class="header-desc">已签到 {{total}} 人</view>
     </view>
+
+    <button class="btn-export" bindtap="exportCSV">📥 导出签到 Excel</button>
+
+    <view class="list-section" wx:if="{{records.length > 0}}">
+      <view class="list-item" wx:for="{{records}}" wx:key="_id">
+        <view class="item-index">{{index + 1}}</view>
+        <view class="item-info">
+          <view class="item-name">{{item.name}}<text class="item-dept"> · {{item.department}}</text></view>
+          <view class="item-time">{{item.timeStr}}</view>
+        </view>
+        <view class="item-badge badge-ok">已签到</view>
+      </view>
+    </view>
+
+    <view wx:else class="empty">
+      <text class="empty-icon">📭</text>
+      <text class="empty-text">{{loading ? '加载中...' : '暂无签到记录'}}</text>
+    </view>
+
+    <button wx:if="{{records.length > 0}}" class="btn-refresh" bindtap="loadRecords">🔄 刷新列表</button>
   </view>
 
-  <!-- 空状态 -->
-  <view wx:elif="{{verifyList.length === 0 && !result}}" class="empty-state">
-    <text class="empty-icon">📭</text>
-    <text class="empty-text">暂无签到记录</text>
-  </view>
 </view>

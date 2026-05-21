@@ -1,32 +1,65 @@
 /* 签到表单页样式 */
-.container {
-  padding: 30px 20px;
-}
+.container { padding: 30px 20px; }
 
 .card {
   background: #fff;
   border-radius: 12px;
   padding: 24px 20px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
 }
 
 .card-title {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 600;
   color: #333;
   text-align: center;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-label {
+/* 扫码区域 */
+.scan-area { text-align: center; }
+.scan-desc {
   font-size: 15px;
-  color: #555;
-  margin-bottom: 8px;
+  color: #666;
+  margin-bottom: 20px;
+  line-height: 1.6;
 }
+
+.btn-scan {
+  width: 100%;
+  background: linear-gradient(135deg, #007AFF, #00c6ff);
+  color: #fff;
+  border-radius: 12px;
+  padding: 16px 0;
+  font-size: 17px;
+  font-weight: 500;
+  box-shadow: 0 4px 15px rgba(0,122,255,0.3);
+}
+
+.btn-scan:active { opacity: 0.85; }
+.btn-scan[disabled] { opacity: 0.6; }
+
+.scan-error {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-top: 14px;
+  text-align: center;
+}
+
+/* 扫码成功 */
+.scan-ok {
+  background: #e8f5e9;
+  color: #2e7d32;
+  font-size: 14px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* 表单 */
+.form-group { margin-bottom: 18px; }
+.form-label { font-size: 15px; color: #555; margin-bottom: 8px; }
 
 .form-input {
   width: 100%;
@@ -39,12 +72,19 @@
   background: #fafafa;
 }
 
-.form-input:focus {
-  border-color: #007AFF;
-  background: #fff;
-}
+.form-input:focus { border-color: #007AFF; background: #fff; }
 
 .submit-btn {
   width: 100%;
   margin-top: 16px;
 }
+
+/* 成功 */
+.success-area {
+  text-align: center;
+  padding: 30px 0;
+}
+
+.success-icon { font-size: 56px; margin-bottom: 14px; }
+.success-text { font-size: 20px; font-weight: 600; color: #2e7d32; margin-bottom: 6px; }
+.success-name { font-size: 15px; color: #666; }

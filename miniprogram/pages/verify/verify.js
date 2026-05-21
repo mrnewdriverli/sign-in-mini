@@ -1,107 +1,73 @@
-// 核销页
+// 签到管理页 - 管理员专用
+const ADMIN_PWD = 'admin888'
+
 Page({
   data: {
-    result: '',
-    resultType: '', // 'success' | 'fail'
-    verifyList: [], // 已核销列表
-    loading: false
+    authed: false,
+    pwdInput: '',
+    records: [],
+    loading: false,
+    total: 0
   },
 
   onShow() {
-    // 每次切回页面刷新已核销列表
-    this.loadVerifiedList()
-  },
-
-  // 扫码核销
-  scanCode() {
-    wx.scanCode({
-      onlyFromCamera: true,
-      scanType: ['qrCode'],
-      success: async (res) => {
-        this.setData({ result: '', resultType: '', loading: true })
-
-        try {
-          const verifyRes = await wx.cloud.callFunction({
-            name: 'verifySignin',
-            data: { qrcodeData: res.result }
-          })
-
-          if (verifyRes.result.success) {
-            const { name, department } = verifyRes.result.data
-            this.setData({
-              resultType: 'success',
-              result: `✅ 核销成功\n姓名：${name}\n部门：${department}`
-            })
-            this.loadVerifiedList()
-          } else {
-            this.setData({
-              resultType: 'fail',
-              result: `❌ ${verifyRes.result.message}`
-            })
-          }
-        } catch (err) {
-          console.error('核销失败:', err)
-          this.setData({
-            resultType: 'fail',
-            result: '❌ 核销失败，请重试'
-          })
-        } finally {
-          this.setData({ loading: false })
-        }
-      },
-      fail: (err) => {
-        if (err.errMsg !== 'scanCode:fail cancel') {
-          this.setData({
-            resultType: 'fail',
-            result: '❌ 扫码失败，请重试'
-          })
-        }
-      }
-    })
-  },
-
-  // 加载已核销记录
-  async loadVerifiedList() {
-    try {
-      const res = await wx.cloud.callFunction({
-        name: 'verifySignin',
-        data: { action: 'list' }
-      })
-
-      if (res.result.success) {
-        this.setData({ verifyList: res.result.data })
-      }
-    } catch (err) {
-      console.error('加载核销列表失败:', err)
+    const authed = wx.getStorageSync('admin_authed')
+    if (authed) {
+      this.setData({ authed: true })
+      this.loadRecords()
     }
   },
 
-  // 导出 Excel
-  async exportExcel() {
-    wx.showLoading({ title: '正在生成 Excel...' })
+  // 验证密码
+  checkPwd() {
+    if (this.data.pwdInput === ADMIN_PWD) {
+      wx.setStorageSync('admin_authed', true)
+      this.setData({ authed: true })
+      this.loadRecords()
+    } else {
+      wx.showToast({ title: '密码错误', icon: 'none' })
+    }
+  },
 
+  onPwdInput(e) {
+    this.setData({ pwdInput: e.detail.value })
+  },
+
+  // 加载签到记录
+  async loadRecords() {
+    this.setData({ loading: true })
     try {
       const res = await wx.cloud.callFunction({ name: 'exportExcel' })
+      if (res.result.success) {
+        this.setData({
+          records: res.result.data || [],
+          total: res.result.count || 0
+        })
+      }
+    } catch (err) {
+      console.error('加载记录失败:', err)
+    } finally {
+      this.setData({ loading: false })
+    }
+  },
 
+  // 导出
+  async exportCSV() {
+    wx.showLoading({ title: '正在生成...' })
+    try {
+      const res = await wx.cloud.callFunction({ name: 'exportExcel', data: { action: 'export' } })
       if (res.result.success) {
         wx.hideLoading()
         wx.showModal({
           title: '导出成功',
-          content: '是否下载并打开 Excel 文件？',
+          content: '下载并打开签到报表？',
           confirmText: '打开',
-          success: (modalRes) => {
-            if (modalRes.confirm) {
+          success: (m) => {
+            if (m.confirm) {
               wx.downloadFile({
                 url: res.result.downloadUrl,
-                success: (downloadRes) => {
-                  wx.openDocument({
-                    filePath: downloadRes.tempFilePath,
-                    showMenu: true
-                  })
-                },
-                fail: () => {
-                  wx.showToast({ title: '文件下载失败', icon: 'none' })
-                }
+                success: (d) => wx.openDocument({ filePath: d.tempFilePath, showMenu: true }),
+                fail: () => wx.showToast({ title: '下载失败', icon: 'none' })
               })
             }
           }
@@ -112,8 +78,7 @@ Page({
       }
     } catch (err) {
       wx.hideLoading()
-      console.error('导出Excel失败:', err)
-      wx.showToast({ title: '导出失败，请重试', icon: 'none' })
+      wx.showToast({ title: '导出失败', icon: 'none' })
     }
   }
 })

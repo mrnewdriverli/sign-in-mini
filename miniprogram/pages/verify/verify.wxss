@@ -1,176 +1,77 @@
-/* 核销页样式 */
-.container {
-  padding: 30px 20px;
-}
-
-.header {
+/* 管理员验证 */
+.auth-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 40px 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
   text-align: center;
-  margin-bottom: 24px;
 }
-
-.header-title {
-  font-size: 24px;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 8px;
-}
-
-.header-desc {
-  font-size: 14px;
-  color: #999;
-}
-
-/* 扫码按钮 */
-.btn-scan {
+.auth-icon { font-size: 48px; margin-bottom: 16px; }
+.auth-title { font-size: 20px; font-weight: 600; color: #333; margin-bottom: 8px; }
+.auth-desc { font-size: 14px; color: #999; margin-bottom: 24px; }
+.auth-input {
   width: 100%;
-  background: linear-gradient(135deg, #007AFF, #00c6ff);
-  color: #fff;
-  border-radius: 12px;
-  padding: 18px 0;
-  font-size: 18px;
-  font-weight: 500;
-  margin-bottom: 20px;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
-}
-
-.btn-scan:active {
-  opacity: 0.85;
-}
-
-.btn-scan[disabled] {
-  opacity: 0.6;
-}
-
-.scan-icon {
-  font-size: 22px;
-  margin-right: 8px;
-}
-
-/* 导出按钮 */
-.btn-export {
-  width: 100%;
-  background: #fff;
-  color: #007AFF;
-  border: 1px solid #007AFF;
-  border-radius: 10px;
-  padding: 14px 0;
-  font-size: 16px;
-  margin-bottom: 24px;
-}
-
-.btn-export:active {
-  background: #f0f7ff;
-}
-
-/* 结果卡片 */
-.result-card {
-  border-radius: 10px;
-  padding: 16px 20px;
-  margin-bottom: 20px;
-  white-space: pre-line;
-}
-
-.result-success {
-  background: #e8f5e9;
-  border: 1px solid #a5d6a7;
-}
-
-.result-fail {
-  background: #ffebee;
-  border: 1px solid #ef9a9a;
-}
-
-.result-text {
+  height: 46px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 0 14px;
   font-size: 15px;
-  line-height: 1.6;
+  text-align: center;
+  box-sizing: border-box;
+  margin-bottom: 16px;
 }
-
-/* 核销列表 */
-.list-section {
-  background: #fff;
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.list-title {
-  font-size: 17px;
-  font-weight: 600;
-  color: #333;
-  padding: 16px 16px 4px;
-}
-
-.list-total {
-  font-size: 13px;
-  color: #999;
-  padding: 0 16px 12px;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.list-item {
-  display: flex;
-  align-items: center;
-  padding: 14px 16px;
-  border-bottom: 1px solid #f5f5f5;
-}
-
-.list-item:last-child {
-  border-bottom: none;
-}
-
-.item-index {
-  width: 28px;
-  height: 28px;
+.auth-input:focus { border-color: #007AFF; }
+.btn-auth {
+  width: 100%;
   background: #007AFF;
   color: #fff;
-  border-radius: 50%;
-  font-size: 13px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 12px;
-  flex-shrink: 0;
-}
-
-.item-info {
-  flex: 1;
-}
-
-.item-name {
+  border-radius: 8px;
+  padding: 12px 0;
   font-size: 16px;
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 2px;
 }
+.btn-auth:active { opacity: 0.85; }
+.auth-hint { font-size: 12px; color: #bbb; margin-top: 14px; }
 
-.item-dept {
-  font-size: 13px;
-  color: #999;
-}
+/* 管理页 */
+.container { padding: 30px 20px; }
+.header { text-align: center; margin-bottom: 24px; }
+.header-title { font-size: 24px; font-weight: 600; color: #333; margin-bottom: 8px; }
+.header-desc { font-size: 15px; color: #007AFF; font-weight: 500; }
 
-.item-time {
-  font-size: 12px;
-  color: #4caf50;
-  flex-shrink: 0;
+.btn-export {
+  width: 100%; background: #007AFF; color: #fff;
+  border-radius: 10px; padding: 14px 0; font-size: 16px;
+  margin-bottom: 20px; border: none;
 }
+.btn-export:active { opacity: 0.85; }
 
-/* 空状态 */
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 40px;
+.list-section { background: #fff; border-radius: 12px; overflow: hidden; }
+.list-item {
+  display: flex; align-items: center;
+  padding: 14px 16px; border-bottom: 1px solid #f5f5f5;
 }
+.list-item:last-child { border-bottom: none; }
 
-.empty-icon {
-  font-size: 48px;
-  margin-bottom: 12px;
+.item-index {
+  width: 28px; height: 28px; background: #007AFF; color: #fff;
+  border-radius: 50%; font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  margin-right: 12px; flex-shrink: 0;
 }
+.item-info { flex: 1; }
+.item-name { font-size: 16px; font-weight: 500; color: #333; margin-bottom: 3px; }
+.item-dept { font-size: 13px; color: #999; font-weight: 400; }
+.item-time { font-size: 12px; color: #aaa; }
+.item-badge { padding: 4px 10px; border-radius: 12px; font-size: 12px; flex-shrink: 0; }
+.badge-ok { background: #e8f5e9; color: #2e7d32; }
 
-.empty-text {
-  font-size: 15px;
-  color: #bbb;
+.empty { display: flex; flex-direction: column; align-items: center; padding-top: 60px; }
+.empty-icon { font-size: 48px; margin-bottom: 12px; }
+.empty-text { font-size: 15px; color: #bbb; }
+
+.btn-refresh {
+  width: 100%; background: #fff; color: #007AFF;
+  border: 1px solid #007AFF; border-radius: 10px;
+  padding: 12px 0; font-size: 15px; margin-top: 16px;
 }
+.btn-refresh:active { background: #f0f7ff; }

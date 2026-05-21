@@ -1,33 +1,40 @@
-<!-- 动态二维码页 -->
+<!-- 动态签到码页 - 管理员专用 -->
 <view class="container">
-  <view class="qrcode-card">
+
+  <!-- 未验证：输入密码 -->
+  <view wx:if="{{!authed}}" class="auth-card">
+    <view class="auth-icon">🔐</view>
+    <view class="auth-title">管理员验证</view>
+    <view class="auth-desc">请输入管理员密码</view>
+    <input class="auth-input" type="password" placeholder="管理员密码" value="{{pwdInput}}" bindinput="onPwdInput" bindconfirm="checkPwd"/>
+    <button class="btn-auth" bindtap="checkPwd">验证进入</button>
+    <view class="auth-hint">默认密码：admin888</view>
+  </view>
+
+  <!-- 已验证：显示二维码 -->
+  <view wx:if="{{authed}}" class="qrcode-card">
     <view class="card-header">
-      <text class="card-icon">🎫</text>
-      <text class="card-title">签到凭证</text>
+      <text class="card-icon">📋</text>
+      <text class="card-title">扫码签到</text>
     </view>
+    <view class="tips-text">请用微信扫描二维码完成签到</view>
 
-    <view class="tips-text">请向工作人员出示此二维码完成核销</view>
-
-    <!-- 二维码展示区：直接用 canvas 展示 -->
+    <!-- 二维码图片 -->
     <view class="qrcode-wrapper">
-      <canvas canvas-id="qrcode-canvas" class="qrcode-canvas" />
-      <view wx:if="{{!qrReady}}" class="qrcode-loading">
-        <text>生成中...</text>
-      </view>
+      <image wx:if="{{qrcodeUrl}}" class="qrcode-image" src="{{qrcodeUrl}}" mode="aspectFit"></image>
+      <view wx:else class="qrcode-loading">二维码加载中...</view>
     </view>
 
-    <!-- 刷新倒计时 -->
     <view class="refresh-info">
       <text class="countdown-text">🔄 {{countdown}} 秒后自动刷新</text>
     </view>
 
-    <!-- 防转发提示 -->
     <view class="security-tip">
       <text class="tip-icon">🔒</text>
-      <text class="tip-text">动态二维码，截图转发无效</text>
+      <text class="tip-text">动态二维码，截图/转发签到无效</text>
     </view>
 
-    <!-- 手动刷新按钮 -->
     <button class="btn-refresh" bindtap="manualRefresh">手动刷新二维码</button>
   </view>
+
 </view>

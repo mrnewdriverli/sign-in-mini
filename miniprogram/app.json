@@ -21,8 +21,12 @@
         "text": "签到"
       },
       {
+        "pagePath": "pages/qrcode/qrcode",
+        "text": "签到码"
+      },
+      {
         "pagePath": "pages/verify/verify",
-        "text": "核销"
+        "text": "管理"
       }
     ]
   },
